@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Axios from "axios";
 
 function Person({ name, number }) {
   return (
     <p>
-      {name}
-      {number}
+      {name} {number}
     </p>
   );
 }
@@ -24,10 +24,16 @@ function Filter({ text, value, onChange }) {
 }
 
 const App = () => {
-  const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   var [newNumber, setNewNumber] = useState("");
   var [filter, setFilter] = useState("");
+
+  useEffect(function getPersons() {
+    Axios.get("http://localhost:3001/persons")
+      .then((response) => response.data)
+      .then((personsData) => setPersons(personsData));
+  }, []);
 
   function addPerson(e) {
     e.preventDefault();
