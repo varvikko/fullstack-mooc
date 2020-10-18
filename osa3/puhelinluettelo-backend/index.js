@@ -70,6 +70,8 @@ app.delete('/api/persons/:id', function deletePerson(req, res) {
 
     if (personIndex >= 0) {
         persons.splice(personIndex, 1)
+    } else {
+        return res.status(404).end();
     }
 
     res.end()
