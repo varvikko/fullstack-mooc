@@ -4,8 +4,25 @@ var morgan = require('morgan')
 
 var app = express()
 
+morgan.token('content-length', function getContentLength(req, res) {
+    return req.headers['content-length'] || 0
+})
+
+morgan.token('body', function getBody(req, res) {
+    return JSON.stringify(req.body)
+})
+
 app.use(bodyParser.json())
-app.use(morgan('tiny'))
+app.use(morgan(function log(t, req, res) {
+    return [
+        t['method'](req, res),
+        t['url'](req, res),
+        t['status'](req, res),
+        t['content-length'](req, res), '-',
+        t['response-time'](req, res), 'ms',
+        t['body'](req, res)
+    ].join(' ')
+}))
 
 app.listen(3000, () => {
     console.log('Listening')
