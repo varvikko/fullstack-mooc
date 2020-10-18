@@ -26,6 +26,8 @@ app.use(morgan(function log(t, req, res) {
     ].join(' ')
 }))
 
+app.use(express.static('build'))
+
 var port = process.env.PORT || 3001
 app.listen(port, () => {
     console.log('Listening')
