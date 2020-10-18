@@ -3,6 +3,8 @@ var bodyParser = require('body-parser')
 var cors = require('cors')
 var morgan = require('morgan')
 
+var db = require('./db')
+
 var app = express()
 
 morgan.token('content-length', function getContentLength(req, res) {
@@ -78,23 +80,24 @@ app.delete('/api/persons/:id', function deletePerson(req, res) {
 })
 
 app.get('/api/persons', function getPersons(req, res) {
-    res.json(persons)
+    db.getPersons().then(response => {
+        res.json(response)
+    })
 })
 
-app.post('/api/persons', function addPerson(req, res) {
+app.post('/api/persons', async function addPerson(req, res) {
     var { name, number } = req.body
 
-    if (!name) {
+    var person = await db.getPerson(name)
+    if (person) {
         return res.status(400).json({ error: 'missing name' })
     } else if (!number) {
         return res.status(400).json({ error: 'missing number' })        
     } else if (persons.find(person => person.name === name)) {
         return res.status(400).json({ error: `${name} is already added`})
     }
-
-    var person = { name, number, id: Math.floor(Math.random() * 1e6) }
-    persons.push(person)
-    res.status(201).json(person)
+    var resp = await db.addPerson(name, number)
+    res.status(201).json(resp)
 })
 
 app.get('/info', function getInfo(req, res) {
