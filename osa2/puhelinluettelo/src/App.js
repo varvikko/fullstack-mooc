@@ -45,11 +45,9 @@ const App = () => {
   var [filter, setFilter] = useState("");
   var [notification, setNotification] = useState(null)
 
-  useEffect(function getPersons() {
-    Axios.get("http://localhost:3001/persons")
-      .then((response) => response.data)
-      .then((personsData) => setPersons(personsData));
-  }, []);
+  useEffect(() => service.getPersons().then(response => {
+    setPersons(response)
+  }), []);
 
   function addNotification(text, type) {
     if (notification) {

@@ -1,5 +1,6 @@
 var express = require('express')
 var bodyParser = require('body-parser')
+var cors = require('cors')
 var morgan = require('morgan')
 
 var app = express()
@@ -12,6 +13,7 @@ morgan.token('body', function getBody(req, res) {
     return JSON.stringify(req.body)
 })
 
+app.use(cors())
 app.use(bodyParser.json())
 app.use(morgan(function log(t, req, res) {
     return [
@@ -24,7 +26,7 @@ app.use(morgan(function log(t, req, res) {
     ].join(' ')
 }))
 
-app.listen(3000, () => {
+app.listen(3001, () => {
     console.log('Listening')
 })
 

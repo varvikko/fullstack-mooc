@@ -1,22 +1,24 @@
 import axios from 'axios'
 
+var baseUrl = '/api/persons'
+
 function getPersons() {
-    return axios.get('http://localhost:3001/persons')
+    return axios.get(baseUrl)
         .then(response => response.data)
 }
 
 function addPerson(name, number) {
-    return axios.post('http://localhost:3001/persons', {
+    return axios.post(baseUrl, {
         name, number
       })
 }
 
 function deletePerson(id) {
-    return axios.delete(`http://localhost:3001/persons/${id}`)
+    return axios.delete(`${baseUrl}/${id}`)
 }
 
 function editPerson(person, number) {
-    return axios.put(`http://localhost:3001/persons/${person.id}`, {
+    return axios.put(`${baseUrl}/${person.id}`, {
         ...person,
         number
     }).then(response => response.data)
