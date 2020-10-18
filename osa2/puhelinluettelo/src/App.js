@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
 import service from './services'
+import './index.css'
 
 function Person({ person, remove }) {
   return (
@@ -25,17 +26,38 @@ function Filter({ text, value, onChange }) {
   );
 }
 
+function Notification({ notification }) {
+  if (!notification) {
+    return null
+  }
+
+  return (
+    <div className={`notification ${notification.type === 'success' ? 'notification--success' : 'notification--error'}`}>
+      { notification.text }
+    </div>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   var [newNumber, setNewNumber] = useState("");
   var [filter, setFilter] = useState("");
+  var [notification, setNotification] = useState(null)
 
   useEffect(function getPersons() {
     Axios.get("http://localhost:3001/persons")
       .then((response) => response.data)
       .then((personsData) => setPersons(personsData));
   }, []);
+
+  function addNotification(text, type) {
+    if (notification) {
+      clearTimeout(notification.id)
+    }
+    var id = setTimeout(() => setNotification(null), 3000)
+    setNotification({ text, type, id })
+  }
 
   function addPerson(e) {
     e.preventDefault();
@@ -50,11 +72,13 @@ const App = () => {
 
           c[i].number = response.number
           setPersons(c)
+          addNotification(`Updated ${newName}'s number`, 'success')
         })
       }
     } else {
       service.addPerson(newName, newNumber).then(response => {
         setPersons([...persons, response.data])
+        addNotification(`Added ${newName}`, 'success')
       })
     }
   }
@@ -64,14 +88,16 @@ const App = () => {
       service.deletePerson(person.id).then(response => {
         var c = [...persons].filter((p) => p.id !== person.id)
         setPersons(c)
+        addNotification(`Removed ${person.name}`, 'success');
       }).catch(() => {
-        // error
+        addNotification(`${person.name} is already deleted`, 'error')
       })
     }
   }
 
   return (
     <div>
+      <Notification notification={notification} />
       <h2>Phonebook</h2>
       <Filter
         text="filter shown with"

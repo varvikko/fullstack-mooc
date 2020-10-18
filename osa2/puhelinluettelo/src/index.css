@@ -1,0 +1,17 @@
+body {
+    margin: 0;
+}
+
+.notification {
+    padding: 0.5rem 0.75rem;
+    color: white;
+    font-family: 'Titillium Web';
+}
+
+.notification--success {
+    background-color: #4D81C8;
+}
+
+.notification--error {
+    background-color: #f6516b;
+}
