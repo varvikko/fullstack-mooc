@@ -9,6 +9,10 @@ router.get('/api/blogs', async function getBlogs(req, res) {
 })
 
 router.post('/api/blogs', async function addBlog(req, res) {
+    if (!req.body.title || !req.body.url) {
+        return res.status(400).end()
+    }
+    
     var blog = new Blog(req.body)
 
     var result = await blog.save()
