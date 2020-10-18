@@ -26,7 +26,8 @@ app.use(morgan(function log(t, req, res) {
     ].join(' ')
 }))
 
-app.listen(3001, () => {
+var port = process.env.PORT || 3001
+app.listen(port, () => {
     console.log('Listening')
 })
 
