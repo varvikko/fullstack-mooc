@@ -91,19 +91,12 @@ app.get('/api/persons', function getPersons(req, res) {
 app.post('/api/persons', async function addPerson(req, res, next) {
     var { name, number } = req.body
 
-    var person = await db.getPerson(name)
+
     try {
-        if (person) {
-            throw new Error(`${name} is already added`)
-        } else if (!number) {
-            throw new Error('missing number')
-        } else if (!name) {
-            throw new Error('missing name')
-        }
+        var resp = await db.addPerson(name, number)   
     } catch(e) {
-        return next({message: e, code: 400})
+        return next({ message: e, code: 400 })
     }
-    var resp = await db.addPerson(name, number)
     res.status(201).json(resp)
 })
 

@@ -1,4 +1,5 @@
 var mongoose = require("mongoose");
+var uniqueValidator = require('mongoose-unique-validator')
 
 var uri = `mongodb+srv://fullstack:${process.env.DB_PASSWORD}@cluster0.zx1mw.mongodb.net/fullstackmooc?retryWrites=true&w=majority`;
 
@@ -10,9 +11,20 @@ mongoose.connect(uri, {
 });
 
 var schema = new mongoose.Schema({
-  name: String,
-  number: String,
+  name: {
+      type: String,
+      required: true,
+      unique: true,
+      minlength: 3
+  },
+  number: {
+      type: String,
+      required: true,
+      minlength: 8
+  }
 });
+
+schema.plugin(uniqueValidator)
 
 schema.set('toJSON', {
     transform: function (document, ret) {

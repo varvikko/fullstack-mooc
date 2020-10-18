@@ -72,12 +72,19 @@ const App = () => {
           c[i].number = response.number
           setPersons(c)
           addNotification(`Updated ${newName}'s number`, 'success')
+          setNewName('')
+          setNewNumber('')
         })
       }
     } else {
       service.addPerson(newName, newNumber).then(response => {
         setPersons([...persons, response.data])
         addNotification(`Added ${newName}`, 'success')
+      }).catch(error => [
+        addNotification(error.response.data.error.message, 'error')
+      ]).finally(() => {
+          setNewName('')
+          setNewNumber('')
       })
     }
   }
