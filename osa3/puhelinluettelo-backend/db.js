@@ -14,6 +14,14 @@ var schema = new mongoose.Schema({
   number: String,
 });
 
+schema.set('toJSON', {
+    transform: function (document, ret) {
+        ret.id = ret._id.toString()
+        delete ret._id
+        delete ret.__v
+    }
+})
+
 var Person = mongoose.model("Person", schema);
 
 function getPersons() {
@@ -24,13 +32,33 @@ function getPerson(name) {
     return Person.findOne({ name })
 }
 
+function getPersonById(id) {
+    return Person.findById(id)
+}
+
+function getPersonCount() {
+    return Person.count({})
+}
+
 function addPerson(name, number) {
     var person = new Person({ name, number })
     return person.save()
 }
 
+function removePerson(id) {
+    return Person.findByIdAndDelete(id)
+}
+
+function updatePerson(id, number) {
+    return Person.findByIdAndUpdate(id, { number }, { new: true })
+}
+
 module.exports = {
     getPersons,
     getPerson,
-    addPerson
+    getPersonById,
+    addPerson,
+    removePerson,
+    updatePerson,
+    getPersonCount
 }

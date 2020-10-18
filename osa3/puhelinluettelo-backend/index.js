@@ -58,23 +58,26 @@ var persons = [
     }
 ]
 
-app.get('/api/persons/:id', function getPerson(req, res) {
-    var person = persons.find(person => person.id == req.params.id)
-
-    if (!person) {
-        return res.status(404).end()
+app.get('/api/persons/:id', async function getPerson(req, res, next) {
+    try {
+        var person = await db.getPersonById(req.params.id)
+        if (!person) {
+            throw new Error()
+        }
+    } catch(e) {
+        return next()
     }
     res.json(person)
 })
 
 app.delete('/api/persons/:id', function deletePerson(req, res) {
-    var personIndex = persons.findIndex(person => person.id == req.params.id)
-
-    if (personIndex >= 0) {
-        persons.splice(personIndex, 1)
-    } else {
-        return res.status(404).end();
-    }
+    db.removePerson(req.params.id)
+        .then(() => {
+            console.log("success")
+        })
+        .catch(() => {
+            console.log("fail")
+        })
 
     res.end()
 })
@@ -85,21 +88,43 @@ app.get('/api/persons', function getPersons(req, res) {
     })
 })
 
-app.post('/api/persons', async function addPerson(req, res) {
+app.post('/api/persons', async function addPerson(req, res, next) {
     var { name, number } = req.body
 
     var person = await db.getPerson(name)
-    if (person) {
-        return res.status(400).json({ error: 'missing name' })
-    } else if (!number) {
-        return res.status(400).json({ error: 'missing number' })        
-    } else if (persons.find(person => person.name === name)) {
-        return res.status(400).json({ error: `${name} is already added`})
+    try {
+        if (person) {
+            throw new Error(`${name} is already added`)
+        } else if (!number) {
+            throw new Error('missing number')
+        } else if (!name) {
+            throw new Error('missing name')
+        }
+    } catch(e) {
+        return next({message: e, code: 400})
     }
     var resp = await db.addPerson(name, number)
     res.status(201).json(resp)
 })
 
-app.get('/info', function getInfo(req, res) {
-    res.send(`<p>Phonebook has info for ${persons.length} people</p><p>${new Date()}</p>`)
+app.put('/api/persons/:id', async function editPerson(req, res) {
+    var p = await db.updatePerson(req.params.id, req.body.number)
+
+    res.json(p)
+})
+
+app.get('/info', async function getInfo(req, res) {
+    var count = await db.getPersonCount()    
+
+    res.send(`<p>Phonebook has info for ${count} people</p><p>${new Date()}</p>`)
+})
+
+app.use(function (error, req, res, next) {
+    return res.status(error.code).json({ error: error.message })
+
+    next()
+})
+
+app.use(function (req, res, next) {
+    res.status(404).json({ error: 'page not found' })
 })

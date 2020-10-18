@@ -46,6 +46,7 @@ const App = () => {
   var [notification, setNotification] = useState(null)
 
   useEffect(() => service.getPersons().then(response => {
+    console.log(response)
     setPersons(response)
   }), []);
 
