@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
+import service from './services'
 
-function Person({ name, number }) {
+function Person({ person, remove }) {
   return (
     <p>
-      {name} {number}
+      {person.name} {person.number}
+      <button onClick={() => remove(person)}>delete</button>
     </p>
   );
 }
 
-function Persons({ persons }) {
+function Persons({ persons, remove }) {
   return persons.map((person) => (
-    <Person key={person.name} name={person.name} number={person.number} />
+    <Person key={person.name} person={person} remove={remove} />
   ));
 }
 
@@ -38,12 +40,36 @@ const App = () => {
   function addPerson(e) {
     e.preventDefault();
 
-    if (persons.find((person) => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`);
+    if ((p = persons.find((person) => person.name === newName))) {
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        var p
+
+        service.editPerson(p, newNumber).then(response => {
+          var i = persons.findIndex(p => p.name === newName)
+          var c = [...persons]
+
+          c[i].number = response.number
+          setPersons(c)
+        })
+      }
     } else {
-      setPersons([...persons, { name: newName, number: newNumber }]);
+      service.addPerson(newName, newNumber).then(response => {
+        setPersons([...persons, response.data])
+      })
     }
   }
+
+  function removePerson(person) {
+    if (window.confirm(`Delete ${person.name}`)) {
+      service.deletePerson(person.id).then(response => {
+        var c = [...persons].filter((p) => p.id !== person.id)
+        setPersons(c)
+      }).catch(() => {
+        // error
+      })
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -73,7 +99,7 @@ const App = () => {
       <Persons
         persons={persons.filter((person) =>
           person.name.toLowerCase().includes(filter.toLowerCase())
-        )}
+        )} remove={removePerson}
       />
     </div>
   );
