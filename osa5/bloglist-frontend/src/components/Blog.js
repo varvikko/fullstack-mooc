@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 const Blog = ({ blog, like, remove }) => {
   var [view, setView] = useState(false);
   return (
-    <div
+    <div className='blog'
       style={{
         padding: "1rem",
         margin: "1rem",

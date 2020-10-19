@@ -39,6 +39,7 @@ function LoginForm(props) {
         <input
           value={props.username}
           onChange={(e) => props.changeUsername(e.target.value)}
+          id="username"
         />
       </div>
       <div>
@@ -47,9 +48,10 @@ function LoginForm(props) {
           type="password"
           value={props.password}
           onChange={(e) => props.changePassword(e.target.value)}
+          id="password"
         />
       </div>
-      <button onClick={props.login}>login</button>
+      <button id="login-button" onClick={props.login}>login</button>
     </div>
   );
 }
@@ -68,8 +70,8 @@ function Notification({ text, type }) {
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  var [username, setUsername] = useState("seppo.taalasmaa");
-  var [password, setPassword] = useState("talonmiestaalasmaa");
+  var [username, setUsername] = useState("");
+  var [password, setPassword] = useState("");
   var [user, setUser] = useState(null);
   var [notification, setNotification] = useState(null);
   var [formVisible, setFormVisible] = useState(false);
@@ -147,7 +149,7 @@ const App = () => {
     setNotification({
       text,
       type,
-      id: setTimeout(() => setNotification(null), 3000),
+      id: setTimeout(() => setNotification(null), 5000),
     });
   }
 
@@ -177,7 +179,7 @@ const App = () => {
               <button onClick={() => setFormVisible(false)}>cancel</button>
             </div>
           ) : (
-            <button onClick={() => setFormVisible(true)}>
+            <button onClick={() => setFormVisible(true)} id='open-create-blog'>
               create new blog
             </button>
           )}

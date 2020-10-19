@@ -23,6 +23,10 @@ app.use('/', BlogController)
 app.use('/', UserController)
 app.use('/', LoginController)
 
+if (process.env.NODE_ENV) {
+    app.use('/', require('./controllers/TestRouter'))
+}
+
 app.use(function (error, req, res, next) {
 	console.log(error)
     switch (error.name) {
