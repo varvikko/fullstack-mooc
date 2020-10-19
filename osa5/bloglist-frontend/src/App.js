@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Blog from "./components/Blog";
+import BlogForm from './components/BlogForm'
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import "./App.css";
@@ -49,44 +50,6 @@ function LoginForm(props) {
         />
       </div>
       <button onClick={props.login}>login</button>
-    </div>
-  );
-}
-
-function BlogForm(props) {
-  var [title, setTitle] = useState("");
-  var [author, setAuthor] = useState("");
-  var [url, setUrl] = useState("");
-
-  return (
-    <div>
-      <h2>create new</h2>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          props.createBlog(title, author, url);
-        }}
-      >
-        <label htmlFor="title">title</label>
-        <input
-          value={props.title}
-          onChange={(e) => setTitle(e.target.value)}
-          id="title"
-        />
-        <label htmlFor="author">author</label>
-        <input
-          value={props.author}
-          onChange={(e) => setAuthor(e.target.value)}
-          id="author"
-        />
-        <label htmlFor="title">url</label>
-        <input
-          value={props.url}
-          onChange={(e) => setUrl(e.target.value)}
-          id="url"
-        />
-        <button type="submit">create</button>
-      </form>
     </div>
   );
 }
@@ -165,6 +128,8 @@ const App = () => {
           { title: title, author: author, url: url },
           user
         );
+        
+        response.user = { name: user.name }
         addNotification(`Created blog ${title}`, "success");
         setBlogs([...blogs, response]);
         setFormVisible(false);

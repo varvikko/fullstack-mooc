@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 
 const Blog = ({ blog, like, remove }) => {
   var [view, setView] = useState(false);
-
   return (
     <div
       style={{
@@ -20,7 +19,7 @@ const Blog = ({ blog, like, remove }) => {
           <p>{blog.url}</p>
           <p>
             likes {blog.likes}
-            <button onClick={() => like(blog)}>like</button>
+            <button id='like-button' onClick={() => like(blog)}>like</button>
           </p>
           <p>{blog.user.name}</p>
           <button
@@ -37,7 +36,7 @@ const Blog = ({ blog, like, remove }) => {
 };
 
 Blog.propTypes = {
-  blog: PropTypes.array,
+  blog: PropTypes.object,
   like: PropTypes.func,
   remove: PropTypes.func,
 };
