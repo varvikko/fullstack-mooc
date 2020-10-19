@@ -24,6 +24,7 @@ app.use('/', UserController)
 app.use('/', LoginController)
 
 app.use(function (error, req, res, next) {
+	console.log(error)
     switch (error.name) {
         case 'CastError':
             return res.status(400).json(error.message)

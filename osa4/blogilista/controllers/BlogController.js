@@ -17,6 +17,7 @@ router.post('/api/blogs', async function addBlog(req, res) {
     var token = req.token
     try {
         var verified = jwt.verify(token, process.env.SECRET)
+	    console.log(token, verified)
     } catch (e) {
         if (e.name === 'SyntaxError') {
             var e = new Error('Invalid token.')
@@ -48,10 +49,9 @@ router.delete('/api/blogs/:id', async function removeBlog(req, res) {
     var id = req.params.id
 
     var token = req.token
-
-    var verified
     try {
-        verified = jwt.verify(token, process.env.SECRET)
+        var verified = jwt.verify(token, process.env.SECRET)
+	    console.log(token, verified)
     } catch (e) {
         if (e.name === 'SyntaxError') {
             var e = new ('Invalid token.')
@@ -61,7 +61,6 @@ router.delete('/api/blogs/:id', async function removeBlog(req, res) {
     }
 
     var blog = await Blog.findById(id)
-
     if (!verified || verified.id !== blog.user.toString()) {
         var e = new Error('Access denied. Please log in.')
         e.name = 'AccessDeniedError'
@@ -76,8 +75,8 @@ router.put('/api/blogs/:id', async function updateBlog(req, res) {
     var { body } = req
     var id = req.params.id
 
-    await Blog.findByIdAndUpdate(id, body)
-    res.status(200).end()
+    var response = await Blog.findByIdAndUpdate(id, { likes: body.likes, author: body.author, url: body.url, title: body.title}, { new: true})
+    res.status(200).json(response)
 })
 
 module.exports = router
