@@ -29,6 +29,8 @@ const reducer = (state = initialState, action) => {
         id: getId(),
         votes: 0
       }]
+    case 'INIT_ANECDOTES':
+      return action.anecdotes
     default:
       return state
   }
@@ -36,6 +38,10 @@ const reducer = (state = initialState, action) => {
 
 export function createAnecdote(anecdote) {
   return { type: 'ADD_ANECDOTE', content: anecdote }
+}
+
+export function initialize(anecdotes) {
+  return { type: 'INIT_ANECDOTES', anecdotes }
 }
 
 export default reducer

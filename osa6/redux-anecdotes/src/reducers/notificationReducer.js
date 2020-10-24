@@ -2,9 +2,9 @@
 function reducer(state = { content: null }, action) {
     switch (action.type) {
         case 'SHOW_NOTIFICATION':
-            return { content: action.content }
+            return { ...state, content: action.content }
         case 'HIDE_NOTIFICATION':
-            return { content: null }
+            return { ...state, content: null }
         default:
             return state
     }
@@ -13,7 +13,7 @@ function reducer(state = { content: null }, action) {
 export function createNotification(content) {
     return {
         type: 'SHOW_NOTIFICATION',
-        content
+        content,
     }
 }
 

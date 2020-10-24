@@ -1,13 +1,33 @@
 import React from 'react'
+
 import { useSelector, useDispatch } from 'react-redux'
 import { hideNotification } from '../reducers/notificationReducer'
+
+export function addNotification(content, t) {
+  return async (dispatch) => {
+    await new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve()
+      }, t * 1000);
+    })
+
+    return dispatch({
+      type: 'SHOW_NOTIFICATION',
+      content
+    })
+  }
+}
 
 const Notification = () => {
   var dispatch = useDispatch()
   var notification = useSelector((state) => {
-    setTimeout(() => {
-      dispatch(hideNotification())
-    }, 5000)
+    
+    if (state.notification.content) {
+      setTimeout(() => {
+        console.log("mit")
+        dispatch(hideNotification())
+      }, 5000)
+    }
     return state.notification
   })
   
