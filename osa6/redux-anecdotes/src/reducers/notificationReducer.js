@@ -1,8 +1,11 @@
 
-function reducer(state = { content: null }, action) {
+function reducer(state = { content: null, id: null }, action) {
     switch (action.type) {
         case 'SHOW_NOTIFICATION':
-            return { ...state, content: action.content }
+            if (state.id) {
+                clearTimeout(state.id)
+            }
+            return { ...state, content: action.content, id: action.id }
         case 'HIDE_NOTIFICATION':
             return { ...state, content: null }
         default:

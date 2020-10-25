@@ -6,14 +6,18 @@ import { hideNotification } from '../reducers/notificationReducer'
 export function addNotification(content, t) {
   return async (dispatch) => {
     await new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve()
+      var id = setTimeout(() => {
+        resolve(id)
       }, t * 1000);
+      
+      dispatch({
+        type: 'SHOW_NOTIFICATION',
+        content,
+        id
+      })
     })
-
     return dispatch({
-      type: 'SHOW_NOTIFICATION',
-      content
+      type: 'HIDE_NOTIFICATION',
     })
   }
 }
@@ -21,16 +25,9 @@ export function addNotification(content, t) {
 const Notification = () => {
   var dispatch = useDispatch()
   var notification = useSelector((state) => {
-    
-    if (state.notification.content) {
-      setTimeout(() => {
-        console.log("mit")
-        dispatch(hideNotification())
-      }, 5000)
-    }
     return state.notification
   })
-  
+
   const style = {
     border: 'solid',
     padding: 10,

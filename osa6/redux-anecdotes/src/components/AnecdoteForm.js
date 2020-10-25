@@ -1,8 +1,9 @@
 import React from "react";
-import { useDispatch } from 'react-redux'
+import { useDispatch, connect } from 'react-redux'
 import { createAnecdote } from '../reducers/anecdoteReducer'
 import { postAnecdote } from '../services/anecdoteService'
 import { createNotification } from '../reducers/notificationReducer'
+import { addNotification } from './Notification'
 
 function sendAnecdote(anecdote) {
   return async (dispatch) => {
@@ -18,16 +19,14 @@ function sendAnecdote(anecdote) {
   }
 }
 
-function AnecoteForm() {
+function AnecdoteForm(props) {
   var dispatch = useDispatch()
 
   function addAnecdote(e) {
     e.preventDefault();
     var anecdote = e.target.anecdote.value;
-    dispatch(createNotification(`created ${anecdote}`))
-    
-
-    dispatch(sendAnecdote(anecdote))
+    props.sendAnecdote(anecdote)
+    props.addNotification(`created ${anecdote}`, 5)
   }
 
   return (
@@ -43,4 +42,9 @@ function AnecoteForm() {
   );
 }
 
-export default AnecoteForm;
+var mapDispatchToProps = {
+  sendAnecdote,
+  addNotification
+}
+
+export default connect(null, mapDispatchToProps)(AnecdoteForm);
