@@ -1,0 +1,158 @@
+@import url('https://fonts.googleapis.com/css2?family=Titillium+Web&display=swap')
+    
+*
+    margin: 0
+    padding: 0
+    box-sizing: border-box
+
+body
+    font-family: 'Titillium Web'
+    background-color: #f6f6f6
+    color: #304455
+
+.header
+    background-color: white
+    display: flex
+    padding: 1rem 2rem
+    margin-bottom: 1rem
+
+.create-button
+    margin-left: auto
+
+.blogs__title
+    text-align: center
+    text-transform: capitalize
+    font-size: 3rem
+
+.blog__form
+    position: absolute
+    background-color: white
+    width: 50%
+    left: 25%
+    top: 10%
+    box-shadow: 0 0 1rem 0 #00000020
+    padding: 2rem
+    border-radius: 1rem
+    text-align: center
+.notification
+    position: fixed
+    right: 2rem
+    top: 2rem
+    color: white
+    font-weight: bold
+    padding: 0.5rem 1rem
+    border-radius: 0.5rem
+    box-shadow: 0 0 .75rem 0 #00000020
+
+.notification--success
+    background-color: #41c6a7
+
+.notification--error
+    background-color: #f6516b
+
+.blog
+    background-color: white
+    box-shadow: 0 0 1rem 0 #00000020
+    margin: 2rem
+    padding: 1rem
+    border-radius: 0.5rem
+
+.blog__content
+    margin-top: 1rem
+    padding-top: 1rem
+    border-top: 1px solid #e5e5e5
+
+.blog__title
+    font-weight: bold
+
+.blog__author
+    font-style: italic
+    margin-left: 1rem
+    font-size: 0.9em
+    color: #99d
+
+.blog__url
+    color: #99e
+    text-decoration: none
+    margin-bottom: 1rem
+    display: block
+
+    &:hover
+        text-decoration: underline
+
+button
+    $bg: #e5e5e5
+
+    appearance: none
+    border: none
+    outline: none
+    background-color: $bg
+    padding: 0.33rem 0.5rem
+    border-radius: 0.25rem
+    transition: background-color, box-shadow
+    transition-duration: .2s
+    text-transform: capitalize
+    cursor: pointer
+
+    &:hover
+        background-color: darken($bg, 5%)
+
+    &:focus
+        box-shadow: 0 0 0 0.2rem transparentize($bg, 0.25)
+
+    &.blog__button
+        float: right
+
+    &.like__button
+        background-color: #41c6a7
+        color: white
+        font-weight: bold
+        margin-left: .5rem
+
+        &:hover
+            background-color: darken(#41c6a7, 5%)
+
+        &:focus
+            box-shadow: 0 0 0 0.2rem transparentize(#41c6a7, 0.25)
+
+    &.remove__button
+        background-color: #f6516b
+        color: white
+        font-weight: bold
+
+        &:hover
+            background-color: darken(#f6516b, 5%)
+
+        &:focus
+            box-shadow: 0 0 0 0.2rem transparentize(#f6516b, 0.25)
+
+.login__form
+    padding: 2rem
+    background-color: white
+    width: 25%
+    text-align: center
+    margin: 0 auto
+    box-shadow: 0 0 1rem 0 #00000022
+    border-radius: 1rem
+    margin-top: 5rem
+    text-transform: capitalize
+
+.form__item
+    margin: 1rem 0
+    display: flex
+    flex-direction: column
+
+input
+    appearance: none
+    border: 1px solid #ccc
+    padding: 0.5rem
+    border-radius: 0.25rem
+    outline: none
+    transition: border-color, box-shadow
+    transition-duration: .2s
+
+    &:hover
+        border-color: darken(#ccc, 5%)
+
+    &:focus
+        box-shadow: 0 0 0 0.2rem transparentize(#ccc, 0.25)

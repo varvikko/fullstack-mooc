@@ -4,25 +4,18 @@ import PropTypes from "prop-types";
 const Blog = ({ blog, like, remove }) => {
   var [view, setView] = useState(false);
   return (
-    <div className='blog'
-      style={{
-        padding: "1rem",
-        margin: "1rem",
-        borderRadius: "0.25rem",
-        border: "1px solid #e5e5e5",
-      }}
-    >
-      {blog.title} {blog.author}{" "}
-      <button onClick={() => setView(!view)}>{view ? "hide" : "view"}</button>
+    <div className='blog'>
+      <span className='blog__title'>{blog.title}</span> <span className='blog__author'>{blog.author}</span>{" "}
+      <button className='blog__button' onClick={() => setView(!view)}>{view ? "hide" : "view"}</button>
       {view ? (
-        <div>
-          <p>{blog.url}</p>
+        <div class="blog__content">
+          <a href="#" className="blog__url">{blog.url}</a>
           <p>
             likes {blog.likes}
-            <button id='like-button' onClick={() => like(blog)}>like</button>
+            <button className='like__button' id='like-button' onClick={() => like(blog)}>like</button>
           </p>
           <p>{blog.user.name}</p>
-          <button
+          <button className='remove__button'
             onClick={() =>
               window.confirm(`Remove blog '${blog.title}'?`) && remove(blog)
             }
