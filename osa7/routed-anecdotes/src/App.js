@@ -7,6 +7,7 @@ import {
     useParams,
     useHistory
 } from 'react-router-dom'
+import { useField } from './hooks/index'
 
 const Menu = () => {
     const padding = {
@@ -76,52 +77,51 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-    const [content, setContent] = useState('')
-    const [author, setAuthor] = useState('')
-    const [info, setInfo] = useState('')
+    var content = useField('text')
+    var author = useField('text')
+    var info = useField('info')
     var history = useHistory()
 
     const handleSubmit = (e) => {
         e.preventDefault()
         props.addNew({
-            content,
-            author,
-            info,
+            content: content.value,
+            author: author.value,
+            info: info.value,
             votes: 0
         })
         history.push('/anecdotes')
-        props.showNotification(`a new anecdote ${content} created!`)
+        props.showNotification(`a new anecdote ${content.value} created!`)
+    }
+
+    function handleReset() {
+      content.reset()
+      author.reset()
+      info.reset()
     }
 
     return (
         <div>
             <h2>create a new anecdote</h2>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} onReset={handleReset}>
                 <div>
                     content
-                    <input
-                        name='content'
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                    />
+                    <input {...content} reset={null} />
                 </div>
                 <div>
                     author
                     <input
-                        name='author'
-                        value={author}
-                        onChange={(e) => setAuthor(e.target.value)}
+                      {...author} reset={null} 
                     />
                 </div>
                 <div>
                     url for more info
                     <input
-                        name='info'
-                        value={info}
-                        onChange={(e) => setInfo(e.target.value)}
+                    {...info} reset={null} 
                     />
                 </div>
                 <button>create</button>
+                <button type='reset'>reset</button>
             </form>
         </div>
     )
