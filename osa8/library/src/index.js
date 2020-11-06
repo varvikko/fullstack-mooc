@@ -101,6 +101,7 @@ const typeDefs = gql`
 
     type Mutation {
         addBook(title: String!, author: String!, published: Int!, genres: [String!]!): Book
+        editAuthor(name: String!, setBornTo: Int!): Author
     }
 `
 
@@ -139,6 +140,14 @@ const resolvers = {
             }
 
             return book
+        },
+        editAuthor: (root, args) => {
+            if ((index = authors.findIndex(author => author.name === args.name)) >= 0) {
+                var index
+                authors[index].born = args.setBornTo
+                return authors[index]
+            }
+            return null
         }
     }
 }
