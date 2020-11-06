@@ -35,6 +35,8 @@ const typeDefs = gql`
         allBooks(author: String, genre: String): [Book]
         allAuthors: [Author]
         me: User
+        genres: [String]!
+        favoriteGenre: String!
     }
 
     type Mutation {
@@ -45,14 +47,8 @@ const typeDefs = gql`
             genres: [String!]!
         ): Book
         editAuthor(name: String!, setBornTo: Int!): Author
-        createUser(
-            username: String!,
-            favoriteGenre: String!
-        ): User
-        login(
-            username: String!,
-            password: String!
-        ): Token
+        createUser(username: String!, favoriteGenre: String!): User
+        login(username: String!, password: String!): Token
     }
 `
 
@@ -61,7 +57,9 @@ const resolvers = {
         bookCount: () => Book.countDocuments(),
         authorCount: () => Author.countDocuments(),
         allBooks: (root, args) => {
-            return Book.find({}).populate('author')
+            return Book.find(
+                args.genre ? { genres: { $in: args.genre } } : {}
+            ).populate('author')
         },
         allAuthors: async () => {
             let authors = await Author.find({})
@@ -75,6 +73,18 @@ const resolvers = {
         },
         me: (root, args, context) => {
             return context.user
+        },
+        genres: async (root, args) => {
+            let books = await Book.find({})
+            let genres = new Set()
+            books.forEach((book) => {
+                book.genres.forEach((genre) => genres.add(genre))
+            })
+            return Array.from(genres)
+        },
+        favoriteGenre: async (root, args, context) => {
+            let user = await User.findOne({ username: context.user.username })
+            return user.favoriteGenre
         }
     },
 
@@ -117,7 +127,10 @@ const resolvers = {
                 throw new UserInputError('Missing data')
             }
 
-            let user = new User({ username: args.username, favoriteGenre: args.favoriteGenre })
+            let user = new User({
+                username: args.username,
+                favoriteGenre: args.favoriteGenre
+            })
             return user.save()
         },
         login: (root, args) => {
@@ -129,8 +142,7 @@ const resolvers = {
                 throw new UserInputError('Invalid password')
             }
 
-            let token = jwt.sign({ username: args.username }, "sekret")
-            console.log(token)
+            let token = jwt.sign({ username: args.username }, process.env.SECRET)
             return {
                 value: token
             }
@@ -144,7 +156,7 @@ const server = new ApolloServer({
     context: async ({ req }) => {
         let auth = req ? req.headers.authorization : null
         if (auth && auth.toLowerCase().startsWith('bearer ')) {
-            let decodedToken = jwt.verify(auth.substring(7), 'sekret')
+            let decodedToken = jwt.verify(auth.substring(7), process.env.SECRET)
             let user = await User.findOne({ username: decodedToken.username })
             return { user }
         }
